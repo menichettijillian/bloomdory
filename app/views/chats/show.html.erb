@@ -1,28 +1,31 @@
 <h1>Chat</h1>
+<div class="container">
 
-<div id="new_message_container">
-  <%= simple_form_for [@chat, @message] do |f| %>
-    <%= f.input :content, label: "Cual es tu plan?", required: true, placeholder: "How should I get started with the challenge?" %>
-    <%= f.button :submit, 'Ask LLM', class: 'btn btn-primary' %>
-  <% end %>
-</div>
-<%# mensaje usuario %>
 
-<%# mensaje IA %>
-<div id="messages">
-  <% @chat.messages.each do |message| %>
-    <% if message.role == "user" %>
-      <div class="d-flex justify-content-end mb-2">
-        <div class="bg-white px-3 pb-0 pt-3 rounded-pill">
-          <%= raw(render_markdown(message.content)) %>
+  <%# mensaje IA %>
+  <div id="messages" class="pb-5 mb-5">
+    <% @chat.messages.each do |message| %>
+      <% if message.role == "user" %>
+        <div class="d-flex justify-content-end mb-2">
+          <div class="bg-white px-3 pb-0 pt-3 rounded-pill">
+            <%= raw(render_markdown(message.content)) %>
+          </div>
         </div>
-      </div>
-    <% elsif message.role == "assistant" %>
-      <div class="d-flex justify-content-start mb-5">
-        <div class="px-3 pb-0 pt-3">
-          <%= raw(render_markdown(message.content)) %>
+      <% elsif message.role == "assistant" %>
+        <div class="d-flex justify-content-start mb-5">
+          <div class="ia-message px-3 pb-0 pt-3 rounded-5 mb-5">
+            <%= raw(render_markdown(message.content)) %>
+          </div>
         </div>
-      </div>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
+  <div id="new_message_container" class="position-fixed bottom-0 start-0 end-0">
+    <div class="container bg-white rounded-5 pt-4 pb-2">
+      <%= simple_form_for [@chat, @message] do |f| %>
+        <%= f.input :content, label: false, required: true, placeholder: "Escribe tu plan" %>
+        <%= f.button :submit, '>', class: 'btn btn-primary rounded-5' %>
+      <% end %>
+    </div>
+  </div>
 </div>
