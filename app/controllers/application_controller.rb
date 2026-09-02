@@ -6,4 +6,8 @@ class ApplicationController < ActionController::Base
 
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
+
+  def after_sign_in_path_for(resource)
+    dashboard_path # Redirecciona a http://127.0.0.1:3000/dashboard
+  end
 end
