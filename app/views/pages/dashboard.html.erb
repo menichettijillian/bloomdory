@@ -1,0 +1,56 @@
+<div class="container mt-4">
+  <h1>Bienvenido a tu Dashboard</h1>
+  <p>¡Hola <%= current_user.email %>!, aquí están tus mensajes y chats.</p>
+</div>
+
+<div class="d-flex" style="height: calc(100vh - 60px);">
+  <!-- PANEL IZQUIERDO (SIDEBAR) -->
+  <div class="bg-light p-3 border-end d-flex flex-column" style="width: 280px;">
+
+    <!-- Botón Mi Semana -->
+    <%= link_to my_week_path, class: "btn btn-outline-primary w-100 mb-3 text-start" do %>
+      <i class="bi bi-calendar-event me-2"></i> Mi Semana
+    <% end %>
+
+    <!-- Botón Nuevo Chat -->
+    <%= link_to "#", class: "btn btn-dark w-100 mb-3 text-start" do %>
+      + Nuevo Chat
+    <% end %>
+
+    <hr>
+
+    <!-- Historial de Chats -->
+    <h6 class="text-muted small text-uppercase">Tus Chats</h6>
+    <div class="flex-grow-1 overflow-auto">
+      <ul class="list-unstyled">
+        <% if @chats.present? %>
+          <% @chats.each do |chat| %>
+            <li class="mb-1">
+              <%= link_to chat.title || "Chat en conversación", "#", class: "text-decoration-none text-dark d-block p-2 rounded hover-bg" %>
+            </li>
+          <% end %>
+        <% else %>
+          <li class="text-muted small p-2">Aún no tienes chats.</li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PANEL DERECHO (ÁREA PRINCIPAL DEL CHAT) -->
+  <div class="flex-grow-1 d-flex flex-column bg-white p-4">
+    <div class="flex-grow-1 d-flex align-items-center justify-content-center text-muted">
+      <div class="text-center">
+        <h2>¿Cómo quieres organizar tu semana?</h2>
+        <p>Selecciona un chat del historial o inicia uno nuevo.</p>
+      </div>
+    </div>
+
+    <!-- Barra de entrada de texto (Input de chat) -->
+    <div class="pt-3 border-top">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Escribe tu mensaje a la IA...">
+        <button class="btn btn-primary" type="button">Enviar</button>
+      </div>
+    </div>
+  </div>
+</div>

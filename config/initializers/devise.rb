@@ -305,6 +305,12 @@ Devise.setup do |config|
   # apps is `200 OK` and `302 Found` respectively, but new apps are generated with
   # these new defaults that match Hotwire/Turbo behavior.
   # Note: These might become the new default in future versions of Devise.
+
+  # El problema: Devise por defecto solo entiende peticiones HTML tradicionales.
+  # Qué hace: Le enseña a Devise a aceptar peticiones :turbo_stream (el formato que usa Turbo para enviar el formulario sin recargar la pantalla completa).
+  config.navigational_formats = ['*/*', :html, :turbo_stream]
+
+  
   config.responder.error_status = :unprocessable_content
   config.responder.redirect_status = :see_other
 

@@ -10,7 +10,8 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto">
-        <% if user_signed_in? %>
+        <%# Bloque cuando SÍ estás autenticado:%>
+        <% if user_signed_in? %> <%# lo provee la gema Devise y evalúa si hay un usuario con sesión activa%>
           <li class="nav-item active">
             <%= link_to "Home", "#", class: "nav-link" %>
           </li>
@@ -28,6 +29,7 @@
             </div>
           </li>
         <% else %>
+          <%# Bloque cuando NO estás autenticado:%>
           <li class="nav-item">
             <%= link_to "Login", new_user_session_path, class: "nav-link" %>
           </li>
