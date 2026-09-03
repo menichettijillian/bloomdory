@@ -4,8 +4,15 @@ class PagesController < ApplicationController
   end
 
   def dashboard
-    # Carga los chats del usuario actual (o un array vacío si aún no tienes el modelo Chat)
-    @chats = current_user.chats rescue []
+    @chats = current_user.chats.order(created_at: :desc)
+
+    @chat = if params[:chat_id].present?
+              @chats.find(params[:chat_id])
+            else
+              @chats.first
+            end
+
+    @message = Message.new if @chat
   end
 
   def myweek
