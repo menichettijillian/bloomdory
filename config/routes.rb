@@ -11,6 +11,6 @@ Rails.application.routes.draw do
   end
 
   get 'dashboard', to: 'pages#dashboard', as: :dashboard
+  get 'schedules', to: 'pages#schedules', as: :schedules
 
-  get "schedules", to: "pages#schedules", as: :schedules
 end

@@ -1,0 +1,32 @@
+body {
+  background-color: #f4f7fc;
+}
+
+.calendar-top-bar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 1rem;
+}
+
+.calendar-month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+}
+
+.calendar-day-column {
+  background-color: #fafbfd;
+  border: 1px solid #edf2f7;
+  min-height: 450px;
+}
+
+.event-card-bloom {
+  background-color: #eef4ff;
+  border-left: 3px solid #3b82f6;
+  transition: transform 0.15s ease;
+}
+
+.event-card-bloom:hover {
+  transform: translateY(-2px);
+}
