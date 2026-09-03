@@ -23,7 +23,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body class="<%= 'dashboard-page' if controller_name == 'pages' && action_name == 'dashboard' %>">
     <%= render "shared/navbar" %> <%# Esto significa que el navbar aparece automáticamente en TODAS las páginas %>
 
     <%= yield %>

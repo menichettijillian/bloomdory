@@ -1,0 +1,49 @@
+<div class="d-flex flex-column h-100 dashboard-chat" data-controller="chat-form">
+  <div id="messages" class="flex-grow-1 overflow-auto py-3" data-chat-form-target="messages">
+    <% if chat.messages.empty? %>
+      <p class="text-muted">
+        Cuéntame qué quieres hacer y cuánto tiempo tienes disponible.
+      </p>
+    <% end %>
+
+    <% chat.messages.order(:created_at, :id).each do |entry| %>
+      <div class="d-flex <%= entry.role == 'user' ? 'justify-content-end' : 'justify-content-start' %> mb-3">
+        <div class="chat-message p-3 rounded-4 <%= entry.role == 'user' ? 'user-message' : 'ia-message' %>">
+          <%= sanitize(render_markdown(entry.content.to_s)) %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div id="new_message_container" class="pt-3">
+    <%= simple_form_for [chat, message],
+                        html: {
+                          class: "chat-composer",
+                          data: { chat_form_target: "form" }
+                        } do |f| %>
+      <%= f.input :content,
+                  label: "Mensaje para Bloomdory",
+                  label_html: { class: "visually-hidden" },
+                  wrapper_html: { class: "chat-composer-field" },
+                  required: true,
+                  placeholder: "Escribe lo que quieres organizar...",
+                  input_html: {
+                    rows: 1,
+                    class: "chat-composer-input",
+                    aria: { describedby: "chat-composer-help" },
+                    data: {
+                      action: "keydown->chat-form#submitWithEnter"
+                    }
+                  } %>
+
+      <%= f.button :submit,
+                    "Enviar",
+                    class: "chat-composer-button",
+                    data: { turbo_submits_with: "Enviando..." } %>
+    <% end %>
+
+    <p id="chat-composer-help" class="chat-composer-help">
+      Bloomdory puede ayudarte a organizar tus actividades y tu tiempo.
+    </p>
+  </div>
+</div>
