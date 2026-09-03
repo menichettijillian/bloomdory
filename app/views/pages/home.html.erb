@@ -1,9 +1,199 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+<div class="container-fluid px-5 py-4">
+  <div class="row">
+    <!-- Columna Izquierda ----------------------------------------------------------------->
+    <div class="col-lg-4 col-md-5">
+      <div class="left-card">
+        <!-- Título principal -->
+        <h1 class="title">Bloomdory<span class="sparkle">✦</span></h1>
 
+        <!-- Subtítulo -->
+        <h2 class="subtitle">Te ayudamos a organizar tu semana!</h2>
 
-<% if user_signed_in? %>
-  You are signed in as <%= current_user.email %>.
-<% else %>
-  You are not signed in!
-<% end %>
+        <!-- Descripción -->
+        <p class="description">
+          Habla con Bloomy, cuéntale qué tienes que hacer, tus objetivos, recordatorios, y te creará un plan semanal organizado y personalizado para que enfoques tu tiempo en lo que importa.
+        </p>
+
+        <!-- Sección inferior con la ilustración -->
+        <div class="mascot-wrapper">
+          <%= image_tag "Bloomy.png", alt: "Mascota Bloomdory", class: "mascot-img" %>
+
+          <div class="speech-bubble">
+            Tu semana, organizada.<br>
+            Tu mente, tranquila.
+            <span class="bubble-heart">♥</span>
+          </div>
+        </div>
+        <!-- Tarjeta Objetivos y recordatorios ------------------------------------------------>
+        <div class="features-card-horizontal">
+        <div class="card-icon">🚀</div>
+          <div class="card-content">
+            <h4>Objetivos y Recordatorios</h4>
+            <p>Añade metas y recordatorios semanales para motivarte cada semana a progresar en lo que te propones!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna Derecha (Chat con IA) --------------------------------------------------------->
+    <div class="col-lg-8 col-md-7">
+  <div class="row g-4">
+    <!-- Columna del Chat IA -->
+    <div class="col-lg-5 col-md-12">
+      <div class="ai-chat-card">
+        <!-- Encabezado de la card -->
+        <div class="chat-header">
+          <span class="sparkle-icon">✦✦</span>
+          <h3>Habla con Bloomy IA</h3>
+        </div>
+
+        <!-- Cuerpo de los mensajes -->
+        <div class="chat-body">
+          <!-- Mensaje del Usuario -->
+          <div class="chat-bubble user-bubble">
+            <p>Esta semana tengo clase el lunes, trabajaré martes y miércoles, quiero hacer ejercicio 3 veces y no olvidar entregar mi proyecto el viernes.</p>
+            <span class="chat-time">10:30 AM</span>
+          </div>
+
+          <!-- Indicador de Flecha de Procesamiento (Opcional) -->
+          <div class="chat-arrow-divider">
+            <span class="arrow-icon">→</span>
+          </div>
+
+          <!-- Respuesta de la IA -->
+          <div class="chat-ai-response">
+            <div class="ai-avatar">
+              <%= image_tag "Bloomychat.png", alt: "Bloom Avatar" %>
+            </div>
+            <div class="chat-bubble ai-bubble">
+              ¡Listo! Organicé tu semana con tus actividades, objetivos y recordatorios.
+              <span class="heart-icon">♥</span>
+            </div>
+          </div>
+
+          <!-- Puntos de carga (Typing indicator) -->
+          <div class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+      <!-- 2. TEXTO DEBAJO DE LA CARD (AQUÍ LO COLOCAS) -->
+      <p class="chat-bottom-text">
+        ¡Organizar tu semana nunca había sido tan fácil! ✨
+      </p>
+    </div>
+
+    <!-- Columna del Calendario ------------------------------------------------------->
+    <div class="col-lg-7 col-md-12">
+      <div class="calendar-card">
+        <!-- Header del Calendario -->
+        <div class="calendar-header">
+          <div class="calendar-title">
+            <span class="calendar-icon">📅</span>
+            <h3>Tu semana organizada</h3>
+          </div>
+          <div class="calendar-nav">
+            <span class="nav-arrow">&lt;</span>
+            <span class="date-range">12 - 18 Mayo</span>
+            <span class="nav-arrow">&gt;</span>
+          </div>
+        </div>
+
+        <!-- Rejilla Semanal -->
+        <div class="calendar-grid">
+          <!-- Encabezado de Días -->
+          <div class="grid-header">
+            <div class="time-col-header"></div>
+            <div class="day-col">LUN<span>12</span></div>
+            <div class="day-col">MAR<span>13</span></div>
+            <div class="day-col">MIÉ<span>14</span></div>
+            <div class="day-col">JUE<span>15</span></div>
+            <div class="day-col">VIE<span>16</span></div>
+            <div class="day-col">SÁB<span>17</span></div>
+            <div class="day-col">DOM<span>18</span></div>
+          </div>
+
+          <!-- Cuerpo del Calendario con Horarios y Eventos -->
+          <div class="grid-body">
+            <!-- Fila 8 AM -->
+            <div class="grid-row">
+              <div class="time-label">8 AM</div>
+              <div class="day-cell">
+                <div class="event-pill blue-pill">Clase</div>
+              </div>
+              <div class="day-cell"></div>
+              <div class="day-cell"></div>
+              <div class="day-cell"></div>
+              <div class="day-cell"></div>
+              <div class="day-cell"></div>
+              <div class="day-cell"></div>
+            </div>
+
+            <!-- Fila 10 AM -->
+            <div class="grid-row">
+              <div class="time-label">10 AM</div>
+              <div class="day-cell"></div>
+              <div class="day-cell">
+                <div class="event-pill blue-pill span-hours">Trabajo Remoto</div>
+              </div>
+              <div class="day-cell">
+                <div class="event-pill blue-pill span-hours">Trabajo Remoto</div>
+              </div>
+              <div class="day-cell"></div>
+              <div class="day-cell">
+                <div class="event-pill blue-pill">Entregar proyecto ⭐</div>
+              </div>
+              <div class="day-cell"></div>
+              <div class="day-cell"></div>
+            </div>
+
+            <!-- Fila 12 PM -->
+            <div class="grid-row">
+              <div class="time-label">12 PM</div>
+              <div class="day-cell"></div>
+              <div class="day-cell"></div>
+              <div class="day-cell"></div>
+              <div class="day-cell"></div>
+              <div class="day-cell"></div>
+              <div class="day-cell"></div>
+              <div class="day-cell">
+                <div class="event-pill blue-pill span-large">Ejercicio 🏋️</div>
+              </div>
+            </div>
+
+            <!-- Fila 4 PM -->
+            <div class="grid-row">
+              <div class="time-label">4 PM</div>
+              <div class="day-cell"></div>
+              <div class="day-cell">
+                <div class="event-pill blue-pill">Ejercicio</div>
+              </div>
+              <div class="day-cell"></div>
+              <div class="day-cell"></div>
+              <div class="day-cell">
+                <div class="event-pill blue-pill">Ejercicio</div>
+              </div>
+              <div class="day-cell"></div>
+              <div class="day-cell"></div>
+            </div>
+
+            <!-- Fila 6 PM -->
+            <div class="grid-row">
+              <div class="time-label">6 PM</div>
+              <div class="day-cell"></div>
+              <div class="day-cell"></div>
+              <div class="day-cell span-wide">
+                <div class="event-pill blue-pill-wide">Estudiar</div>
+              </div>
+            </div>
+
+            <!-- Fila Bloque Inferior / Recordatorio -->
+            <div class="calendar-footer-pill">
+              <span>Leer 20 min cada día 📖</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
