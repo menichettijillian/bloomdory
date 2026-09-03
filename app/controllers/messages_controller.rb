@@ -64,9 +64,13 @@ class MessagesController < ApplicationController
     if @message.save
       @ruby_llm_chat = RubyLLM.chat
       build_conversation_history
-      # response = @ruby_llm_chat.with_instructions(SYSTEM_PROMPT).ask(@message.content)
+
+      # tools
+      @ruby_llm_chat.with_tool(CreateTool.new(@chat.user))
+      @ruby_llm_chat.with_tool(UpdateTool.new(@chat.user))
+
       response = @ruby_llm_chat.with_instructions(instructions).ask(@message.content)
-      # response = ruby_llm_chat.with_instructions(SYSTEM_PROMPT).ask(@message.content)
+
       @assistant_message = @chat.messages.create(role: "assistant", content: response.content)
       redirect_to chat_path(@chat)
     else
@@ -80,6 +84,7 @@ class MessagesController < ApplicationController
     schedules = @chat.user.schedules
     schedules.map do |schedule|
       [
+        "ID: #{schedule.id}",
         "Title: #{schedule.title}",
         "Description: #{schedule.description}",
         "Start date: #{schedule.starting_date}",
