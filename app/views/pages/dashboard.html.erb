@@ -1,21 +1,19 @@
-<div class="container mt-4">
-  <h1>Bienvenido a tu Dashboard</h1>
-  <p>¡Hola <%= current_user.email %>!, aquí están tus mensajes y chats.</p>
-</div>
 
-<div class="d-flex" style="height: calc(100vh - 60px);">
+
+<div class="d-flex dashboard-workspace">
   <!-- PANEL IZQUIERDO (SIDEBAR) -->
-  <div class="bg-light p-3 border-end d-flex flex-column" style="width: 280px;">
+  <div class="bg-light p-3 border-end d-flex flex-column dashboard-sidebar" style="width: 280px; flex-shrink: 0;">
 
     <!-- Botón Mi Semana -->
     <%= link_to my_week_path, class: "btn btn-outline-primary w-100 mb-3 text-start" do %>
       <i class="bi bi-calendar-event me-2"></i> Mi Semana
     <% end %>
 
-    <!-- Botón Nuevo Chat -->
-    <%= link_to "#", class: "btn btn-dark w-100 mb-3 text-start" do %>
-      + Nuevo Chat
-    <% end %>
+    <%# # Botón Nuevo Chat %>
+    <%= button_to "+ Nuevo Chat",
+              chats_path,
+              method: :post,
+              class: "btn btn-dark w-100 mb-3 text-start" %>
 
     <hr>
 
@@ -25,8 +23,31 @@
       <ul class="list-unstyled">
         <% if @chats.present? %>
           <% @chats.each do |chat| %>
-            <li class="mb-1">
-              <%= link_to chat.title || "Chat en conversación", "#", class: "text-decoration-none text-dark d-block p-2 rounded hover-bg" %>
+            <li class="mb-1 d-flex align-items-center">
+              <%= link_to dashboard_path(chat_id: chat.id),
+                          class: "flex-grow-1 text-decoration-none d-block p-2 rounded #{chat == @chat ? 'bg-dark text-white' : 'text-dark'}" do %>
+                <div class="chat-history-title">
+                  <%= chat.title.presence || "Conversación ##{chat.id}" %>
+                </div>
+
+                <small class="<%= chat == @chat ? 'text-white-50' : 'text-muted' %>">
+                  <%= chat.created_at.strftime("%d/%m/%Y · %H:%M") %>
+                </small>
+              <% end %>
+
+              <%= button_to chat_path(chat),
+                            method: :delete,
+                            class: "btn btn-sm text-danger ms-1",
+                            form: {
+                              data: {
+                                turbo_confirm: "¿Seguro que quieres eliminar esta conversación?"
+                              }
+                            },
+                            aria: {
+                              label: "Eliminar #{chat.title.presence || 'conversación'}"
+                            } do %>
+                <i class="fa-solid fa-trash"></i>
+              <% end %>
             </li>
           <% end %>
         <% else %>
@@ -36,21 +57,18 @@
     </div>
   </div>
 
-  <!-- PANEL DERECHO (ÁREA PRINCIPAL DEL CHAT) -->
-  <div class="flex-grow-1 d-flex flex-column bg-white p-4">
-    <div class="flex-grow-1 d-flex align-items-center justify-content-center text-muted">
-      <div class="text-center">
-        <h2>¿Cómo quieres organizar tu semana?</h2>
-        <p>Selecciona un chat del historial o inicia uno nuevo.</p>
-      </div>
-    </div>
 
-    <!-- Barra de entrada de texto (Input de chat) -->
-    <div class="pt-3 border-top">
-      <div class="input-group">
-        <input type="text" class="form-control" placeholder="Escribe tu mensaje a la IA...">
-        <button class="btn btn-primary" type="button">Enviar</button>
+  <%# # panel derecho %>
+  <div class="flex-grow-1 bg-white p-4 dashboard-main">
+    <% if @chat %>
+      <%= render "chats/chat", chat: @chat, message: @message %>
+    <% else %>
+      <div class="h-100 d-flex align-items-center justify-content-center">
+        <div class="text-center">
+          <h2>¿Cómo quieres organizar tu semana?</h2>
+          <p>Inicia una conversación para preparar tu próximo plan.</p>
+        </div>
       </div>
-    </div>
+    <% end %>
   </div>
 </div>
