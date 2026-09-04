@@ -21,6 +21,7 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   </head>
 
   <body class="<%= content_for(:body_class) %>">
@@ -29,6 +30,47 @@
     <%= yield %>
 
     <%= render "shared/flashes" %>
+
+    <%# --- MODAL DE CONFIRMACIÓN PERSONALIZADO CON BLOOMY-09 --- %>
+    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 p-2">
+          <div class="modal-header border-0 pb-0">
+            <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center pt-0">
+            <%= image_tag "Bloomy-09.png", alt: "Alerta Bloomdory", style: "width: 80px; height: 80px; object-fit: contain;" %>
+
+            <h5 class="modal-title fw-bold text-dark mt-3 mb-1" id="deleteConfirmationModalLabel">¿Estás segura?</h5>
+            <p class="text-secondary mb-4">Vas a eliminar el evento:<br><strong class="text-danger" id="modalScheduleTitleDisplay"></strong>.<br>Esta acción no se puede deshacer.</p>
+
+            <div class="d-flex justify-content-center gap-3">
+              <button type="button" class="btn btn-light rounded-pill px-4 text-muted fw-semibold border" data-bs-dismiss="modal">Cancelar</button>
+              <%= link_to "Sí, eliminar", "#", data: { turbo_method: :delete }, class: "btn btn-danger rounded-pill px-4 fw-semibold shadow-sm", id: "confirmDeleteButton" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%# --- FIN DEL MODAL --- %>
+
+    <%# --- SCRIPT PARA CONECTAR EL MODAL Y EL BOTÓN --- %>
+    <script>
+      const deleteModal = document.getElementById('deleteConfirmationModal');
+      if (deleteModal) {
+        deleteModal.addEventListener('show.bs.modal', event => {
+          const button = event.relatedTarget;
+          const scheduleTitle = button.getAttribute('data-bs-schedule_title');
+          const schedulePath = button.getAttribute('data-bs-schedule_path');
+
+          const titleDisplay = deleteModal.querySelector('#modalScheduleTitleDisplay');
+          const confirmButton = deleteModal.querySelector('#confirmDeleteButton');
+
+          titleDisplay.textContent = scheduleTitle;
+          confirmButton.setAttribute('href', schedulePath);
+        });
+      }
+    </script>
 
   </body>
 </html>

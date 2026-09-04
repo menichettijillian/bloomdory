@@ -91,6 +91,15 @@ class PagesController < ApplicationController
     end
   end
 
+  def objectives
+    # Pendiente
+  end
+
+  def construction
+    
+  end
+       # Pendiente
   def profile
+    
   end
 end
