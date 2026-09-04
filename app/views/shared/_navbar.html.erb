@@ -1,15 +1,22 @@
-<nav class="navbar navbar-expand-sm navbar-light navbar-lewagon">
-  <div class="container-fluid">
+<nav class="navbar navbar-expand-sm navbar-light navbar-lewagon position-relative">
+  <div class="container-fluid d-flex align-items-center justify-content-between">
     <%= link_to root_path, class: "navbar-brand" do %>
-      <%= image_tag "logo sin fondo.png" %>
+      <%= image_tag "logo sin fondo.png", alt: "Bloomdory", style: "height: 70px !important; width: auto;"%>
+    <% end %>
+
+    <%# TEXTO CENTRADO: APARECE SIEMPRE EN LA HOME (CON O SIN SESIÓN INICIADA) %>
+    <% if current_page?(root_path) %>
+      <div class="navbar-center-text d-none d-md-block">
+        Toma el control de tu tiempo ⏱
+      </div>
     <% end %>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto">
+    <div class="collapse navbar-collapse flex-grow-1" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto align-items-center w-100 justify-content-end">
         <%# Bloque cuando SÍ estás autenticado:%>
         <% if user_signed_in? %> <%# lo provee la gema Devise y evalúa si hay un usuario con sesión activa%>
           <li class="nav-item">
@@ -29,7 +36,7 @@
           </li>
         <% else %>
           <%# Bloque cuando NO estás autenticado:%>
-          <li class="nav-item">
+          <li class="nav-item ms-auto">
             <%= link_to "Login", new_user_session_path, class: "login-btn" %>
           </li>
         <% end %>
@@ -37,3 +44,4 @@
     </div>
   </div>
 </nav>
+
