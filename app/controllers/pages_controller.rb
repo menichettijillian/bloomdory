@@ -90,4 +90,12 @@ class PagesController < ApplicationController
       @schedules = base_schedules
     end
   end
+
+  def objectives
+    # Pendiente
+  end
+
+  def construction
+       # Pendiente
+  end
 end

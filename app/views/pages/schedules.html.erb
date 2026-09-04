@@ -1,32 +1,19 @@
 <div class="container-fluid my-4 px-4">
 
-  <%# Barra superior general %>
+  <%# Barra superior general (limpia, solo con título y el botón de objetivos) %>
   <div class="calendar-top-bar mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
     <div>
       <h2 class="fw-bold text-dark mb-1">Tu semana organizada</h2>
       <p class="text-muted mb-0">Visualiza y administra tus actividades de la semana.</p>
     </div>
 
-    <div class="d-flex align-items-center gap-3">
-      <div class="date-navigator bg-white px-3 py-2 rounded-pill shadow-sm border d-flex align-items-center gap-2">
-        <%# mover semanas %>
-        <%= link_to schedules_path(start_date: @current_date - 1.week, category: params[:category]), class: "btn btn-sm btn-light rounded-circle text-decoration-none d-flex align-items-center justify-content-center", style: "width: 28px; height: 28px;" do %>
-          <i class="bi bi-chevron-left"></i>
-        <% end %>
-
-        <span class="fw-semibold text-secondary small px-2"><%= @week_range_text %></span>
-
-        <%# Botón semana siguiente %>
-        <%= link_to schedules_path(start_date: @current_date + 1.week, category: params[:category]), class: "btn btn-sm btn-light rounded-circle text-decoration-none d-flex align-items-center justify-content-center", style: "width: 28px; height: 28px;" do %>
-          <i class="bi bi-chevron-right"></i>
-        <% end %>
-      </div>
-
-      <%= link_to "Dashboard", dashboard_path, class: "btn btn-outline-primary rounded-pill px-4" %>
+    <div>
+      <%= link_to "Mis objetivos", objectives_path, class: "btn btn-outline-primary rounded-pill px-4" %>
     </div>
+  </div>
 
   <div class="row">
-    <!-- SIDEBAR IZQUIERDA: Mini Calendario y Categorías -->
+    <%# sidebar %>
     <div class="col-lg-3 mb-4">
       <div class="bg-white p-3 rounded-4 shadow-sm border-0">
 
@@ -49,7 +36,7 @@
           <%= link_to "Hoy", schedules_path, class: "btn btn-xs btn-outline-secondary rounded-pill px-2 py-0", style: "font-size: 0.75rem;" %>
         </div>
 
-        <%# Mini Calendario visual %>
+        <%# Mini Calendario %>
         <div class="mini-calendar text-center mb-4">
           <div class="d-flex justify-content-around text-muted fw-bold mb-2" style="font-size: 0.7rem;">
             <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sab</span><span>Dom</span>
@@ -69,7 +56,7 @@
 
         <hr class="text-muted opacity-25">
 
-    <%# categorías %>
+        <%# Categorías %>
         <h6 class="fw-bold text-dark mb-3">Categorías</h6>
         <div class="list-group list-group-flush">
           <%= link_to schedules_path, class: "list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 rounded-pill mb-1 px-3 py-2 #{params[:category].blank? ? 'active bg-primary text-white' : 'text-dark bg-light'}" do %>
@@ -88,34 +75,56 @@
       </div>
     </div>
 
-   <%# contenedor principal %>
+    <%# Contenedor principal de la semana con fondo azul clarito y título grande %>
     <div class="col-lg-9">
-      <div class="calendar-main-container bg-white p-4 rounded-4 shadow-sm border-0">
+      <div class="calendar-main-container p-4 rounded-4 shadow-sm border-0" style="background-color: #f0f4ff;">
+
+        <%# Encabezado%>
+        <div class="d-flex justify-content-between align-items-center mb-4 px-2 flex-wrap gap-3">
+          <%
+            months_spanish = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+            current_month_name = months_spanish[@current_date.month - 1]
+          %>
+
+          <h1 class="fw-bold text-dark mb-0 d-flex align-items-center gap-3 fs-2">
+            <%= image_tag "Bloomy-07.png", alt: "Bloomdory Flower", style: "width: 68px; height: 68px; object-fit: contain;" %>
+            <span><%= "#{current_month_name} #{@current_date.year}" %></span>
+          </h1>
+
+          <%# Botón navegador de semanas dentro del cuadro principal %>
+          <div class="date-navigator bg-white px-3 py-2 rounded-pill shadow-sm border d-flex align-items-center gap-2">
+            <%# Mover semana anterior %>
+            <%= link_to schedules_path(start_date: @current_date - 1.week, category: params[:category]), class: "btn btn-sm btn-light rounded-circle text-decoration-none d-flex align-items-center justify-content-center shadow-sm", style: "width: 28px; height: 28px;" do %>
+              <i class="bi bi-chevron-left"></i>
+            <% end %>
+
+            <span class="fw-semibold text-secondary small px-2"><%= @week_range_text %></span>
+
+            <%# Botón semana siguiente %>
+            <%= link_to schedules_path(start_date: @current_date + 1.week, category: params[:category]), class: "btn btn-sm btn-light rounded-circle text-decoration-none d-flex align-items-center justify-content-center shadow-sm", style: "width: 28px; height: 28px;" do %>
+              <i class="bi bi-chevron-right"></i>
+            <% end %>
+          </div>
+        </div>
+
         <div class="calendar-month-grid">
           <% @week_days.each do |day_info| %>
-            <div class="calendar-day-column p-2 rounded-3">
+            <%# Columna de cada día habilitada con el controlador Stimulus de Drag & Drop %>
+            <div class="calendar-day-column p-2 rounded-3 bg-white"
+                 data-controller="drag"
+                 data-drag-url-value="<%= move_schedule_path(':id') %>"
+                 data-date="<%= day_info[:date] %>">
 
               <div class="text-center pb-2 mb-2 border-bottom">
                 <span class="d-block text-muted fw-bold text-uppercase" style="font-size: 0.7rem;"><%= day_info[:name] %></span>
                 <span class="d-block fw-bold text-dark fs-6 mt-1"><%= day_info[:num] %></span>
               </div>
 
-              <% day_schedules = @schedules.select { |s| s.starting_date&.to_date == day_info[:date] } %>
+              <%# Filtra los eventos del día y los ordena de la hora más temprana a la más noche %>
+              <% day_schedules = @schedules.select { |s| s.starting_date&.to_date == day_info[:date] }.sort_by { |s| s.starting_hour || Time.at(0) } %>
 
               <% if day_schedules.present? %>
-                <% day_schedules.each do |schedule| %>
-                  <div class="event-card-bloom p-2 mb-2 rounded-3 shadow-sm">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                      <span class="badge bg-light text-primary fw-bold" style="font-size: 0.65rem;">
-                        <%= schedule.starting_hour&.strftime("%I:%M %p") %>
-                      </span>
-                    </div>
-                    <div class="fw-bold text-dark" style="font-size: 0.8rem;"><%= schedule.title %></div>
-                    <% if schedule.category.present? %>
-                      <small class="text-muted d-block mt-1" style="font-size: 0.7rem;"><%= schedule.category %></small>
-                    <% end %>
-                  </div>
-                <% end %>
+                <%= render day_schedules %>
               <% else %>
                 <div class="text-center text-muted py-4 small" style="font-size: 0.75rem; opacity: 0.5;">Sin eventos</div>
               <% end %>

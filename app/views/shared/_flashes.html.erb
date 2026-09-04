@@ -1,12 +1,24 @@
-<% if notice %>
-  <div class="alert alert-info alert-dismissible fade show m-1" role="alert">
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    <%= notice %>
-  </div>
-<% end %>
-<% if alert %>
-  <div class="alert alert-warning alert-dismissible fade show m-1" role="alert">
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    <%= alert %>
+<% flash.each do |message_type, message| %>
+  <% next if message.blank? %>
+  <div class="alert bloom-custom-alert alert-dismissible fade show shadow-lg rounded-4 p-3 m-3 position-fixed bottom-0 end-0 border-0" role="alert" style="z-index: 1080; max-width: 360px; background-color: #ffffff;">
+    <div class="d-flex align-items-center gap-3">
+      <%# Imagen de Bloomy-09 para las alertas %>
+      <div class="flex-shrink-0">
+        <%= image_tag "Bloomy-09.png", alt: "Alerta Bloomy", style: "width: 50px; height: 50px; object-fit: contain;" %>
+      </div>
+
+      <%# Mensaje %>
+      <div class="flex-grow-1">
+        <h6 class="fw-bold text-dark mb-1" style="font-size: 0.85rem;">
+          <%= message_type.to_s == 'notice' ? '¡Aviso!' : '¡Atención!' %>
+        </h6>
+        <p class="text-secondary small mb-0" style="font-size: 0.8rem; line-height: 1.2;">
+          <%= message %>
+        </p>
+      </div>
+
+      <%# Botón de cerrar %>
+      <button type="button" class="btn-close shadow-none align-self-start" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   </div>
 <% end %>
