@@ -64,20 +64,20 @@
   box-shadow: 0 6px 16px rgba(80, 87, 245, 0.35);
 }
 
-/* Texto central en la Navbar */
-.navbar-center-text {
-  position: absolute;
-  left: 47%;
-  top: 30%;
-  transform: translateX(-50%);
-  font-family: 'Fredoka', sans-serif; /* O la fuente que elegiste */
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: #2563eb;                    /* Azul primario acorde a tu paleta */
-  letter-spacing: 0.3px;
-  background-color: #eff6ff;         /* Fondo azul muy suave tipo píldora */
-  padding: 6px 18px;
-  border-radius: 20px;
-  border: 1px solid #dbeafe;         /* Borde sutil */
-  white-space: nowrap;
+.dashboard-link {
+  background-color: #5057f5;
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: .85rem;
+  padding: 10px 28px;
+  border-radius: 50px;
+  text-decoration: none !important; /* Quita el subrayado */
+  box-shadow: 0 4px 12px rgba(80, 87, 245, 0.25);
+  transition: all 0.2s ease-in-out;
+}
+
+.dashboard-link {
+  background-color: #3b42e0;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(80, 87, 245, 0.35);
 }

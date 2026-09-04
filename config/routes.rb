@@ -13,4 +13,6 @@ Rails.application.routes.draw do
   get 'dashboard', to: 'pages#dashboard', as: :dashboard
   get 'schedules', to: 'pages#schedules', as: :schedules
 
+  get 'profile', to: 'pages#profile', as: :profile
+
 end
