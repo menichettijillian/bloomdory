@@ -1,38 +1,50 @@
-class SchedulesController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_schedule, only: [:edit, :update, :destroy]
+class PagesController < ApplicationController
+  before_action :authenticate_user!, only: [:dashboard, :schedules]
 
-  def edit
+  def home
   end
 
-  def update
-    if @schedule.update(schedule_params)
-      redirect_to schedules_path, notice: "¡Ajuste de manecillas! Tu evento ha cambiado de rumbo."
+  def dashboard
+  end
+
+  def schedules
+    # Manejo de fechas ara la navegación del mini calendario
+    if params[:start_date].present?
+      @current_date = Date.parse(params[:start_date])
+    elsif params[:month].present? && params[:year].present?
+      @current_date = Date.new(params[:year].to_i, params[:month].to_i, 1)
     else
-      render :edit, status: :unprocessable_entity
+      @current_date = Date.current # Siempre actualizado al día real
     end
-  end
 
-  def destroy
-    @schedule.destroy
-    redirect_to schedules_path, alert: "Despejado por aquí. ¡Adiós a este compromiso!"
-  end
+    # Calcular el inicio y fin de la semana
+    start_of_week = @current_date.beginning_of_week(:monday)
+    end_of_week = @current_date.end_of_week(:monday)
 
-  private
+    # Texto para la barra superior
+    @week_range_text = "#{start_of_week.strftime('%d')} - #{end_of_week.strftime('%d %B %Y')}"
 
-  def set_schedule
-    @schedule = current_user.schedules.find(params[:id])
-  end
+    # Días de la semana para grid
+    @week_days = (start_of_week..end_of_week).map do |date|
+      {
+        name: l(date, format: "%a"),
+        num: date.day,
+        date: date
+      }
+    end
 
-  def schedule_params
-    params.require(:schedule).permit(
-      :title,
-      :description,
-      :category,
-      :starting_date,
-      :starting_hour,
-      :ending_date,
-      :ending_hour
-    )
+    # Filtro de eventos por usuario y semana
+    base_schedules = current_user.schedules.where(starting_date: start_of_week..end_of_week)
+
+    # Contadores y lista de categorías para la barra lateral
+    @all_user_schedules = current_user.schedules.where(starting_date: start_of_week..end_of_week)
+    @categories = @all_user_schedules.pluck(:category).compact.uniq
+
+    # Filtro por categoría seleccionada si existe
+    if params[:category].present? && params[:category] != "Todas"
+      @schedules = base_schedules.where(category: params[:category])
+    else
+      @schedules = base_schedules
+    end
   end
 end
