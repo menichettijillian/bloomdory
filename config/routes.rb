@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   resources :schedules, only: [:edit, :update, :destroy]
 
-  resources :chats, only: [:show, :create] do
+  resources :chats, only: [:show, :create, :destroy] do
     resources :messages, only: [:create]
   end
 
