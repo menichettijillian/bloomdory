@@ -1,56 +1,129 @@
-<div class="container my-5">
+<div class="container-fluid my-4 px-4">
 
-  <%# Barra superior %>
-  <div class="calendar-top-bar mb-4">
+  <%# Barra superior general %>
+  <div class="calendar-top-bar mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
     <div>
       <h2 class="fw-bold text-dark mb-1">Tu semana organizada</h2>
       <p class="text-muted mb-0">Visualiza y administra tus actividades de la semana.</p>
     </div>
+
     <div class="d-flex align-items-center gap-3">
       <div class="date-navigator bg-white px-3 py-2 rounded-pill shadow-sm border d-flex align-items-center gap-2">
-        <button class="btn btn-sm btn-light rounded-circle"><i class="bi bi-chevron-left"></i></button>
-        <span class="fw-semibold text-secondary small"><%= @week_range_text %></span>
-        <button class="btn btn-sm btn-light rounded-circle"><i class="bi bi-chevron-right"></i></button>
+        <%# mover semanas %>
+        <%= link_to schedules_path(start_date: @current_date - 1.week, category: params[:category]), class: "btn btn-sm btn-light rounded-circle text-decoration-none d-flex align-items-center justify-content-center", style: "width: 28px; height: 28px;" do %>
+          <i class="bi bi-chevron-left"></i>
+        <% end %>
+
+        <span class="fw-semibold text-secondary small px-2"><%= @week_range_text %></span>
+
+        <%# Botón semana siguiente %>
+        <%= link_to schedules_path(start_date: @current_date + 1.week, category: params[:category]), class: "btn btn-sm btn-light rounded-circle text-decoration-none d-flex align-items-center justify-content-center", style: "width: 28px; height: 28px;" do %>
+          <i class="bi bi-chevron-right"></i>
+        <% end %>
       </div>
-      <%= link_to "← Dashboard", dashboard_path, class: "btn btn-outline-primary rounded-pill px-3" %>
+
+      <%= link_to "Dashboard", dashboard_path, class: "btn btn-outline-primary rounded-pill px-4" %>
     </div>
-  </div>
 
-  <!-- Contenedor Principal del Calendario -->
-  <div class="calendar-main-container bg-white p-4 rounded-4 shadow-sm border-0">
+  <div class="row">
+    <!-- SIDEBAR IZQUIERDA: Mini Calendario y Categorías -->
+    <div class="col-lg-3 mb-4">
+      <div class="bg-white p-3 rounded-4 shadow-sm border-0">
 
-    <div class="calendar-month-grid">
-      <% @week_days.each do |day_info| %>
-        <div class="calendar-day-column p-2 rounded-3">
+        <%= form_with url: schedules_path, method: :get, local: true, class: "mb-3" do |f| %>
+          <div class="d-flex gap-2 mb-2">
+            <% months_in_spanish = [
+              ['Enero', 1], ['Febrero', 2], ['Marzo', 3], ['Abril', 4],
+              ['Mayo', 5], ['Junio', 6], ['Julio', 7], ['Agosto', 8],
+              ['Septiembre', 9], ['Octubre', 10], ['Noviembre', 11], ['Diciembre', 12]
+            ] %>
 
-          <div class="text-center pb-2 mb-2 border-bottom">
-            <span class="d-block text-muted fw-bold text-uppercase" style="font-size: 0.7rem;"><%= day_info[:name] %></span>
-            <span class="d-block fw-bold text-dark fs-6 mt-1"><%= day_info[:num] %></span>
+            <%= f.select :month, options_for_select(months_in_spanish, @current_date.month), {}, { class: "form-select form-select-sm", onchange: "this.form.submit();" } %>
+
+            <%= f.select :year, options_for_select((2024..2030).to_a, @current_date.year), {}, { class: "form-select form-select-sm", onchange: "this.form.submit();" } %>
           </div>
+        <% end %>
 
-          <%# Filtro %>
-          <% day_schedules = @schedules.select { |s| s.starting_date&.to_date == day_info[:date] } %>
+        <%# Botón para regresar a la fecha actual %>
+        <div class="text-end mb-2">
+          <%= link_to "Hoy", schedules_path, class: "btn btn-xs btn-outline-secondary rounded-pill px-2 py-0", style: "font-size: 0.75rem;" %>
+        </div>
 
-          <% if day_schedules.present? %>
-            <% day_schedules.each do |schedule| %>
-              <div class="event-card-bloom p-2 mb-2 rounded-3 shadow-sm">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                  <span class="badge bg-light text-primary fw-bold" style="font-size: 0.65rem;">
-                    <%= schedule.starting_hour&.strftime("%I:%M %p") %>
-                  </span>
-                </div>
-                <div class="fw-bold text-dark" style="font-size: 0.8rem;"><%= schedule.title %></div>
-                <% if schedule.category.present? %>
-                  <small class="text-muted d-block mt-1" style="font-size: 0.7rem;"><%= schedule.category %></small>
-                <% end %>
+        <%# Mini Calendario visual %>
+        <div class="mini-calendar text-center mb-4">
+          <div class="d-flex justify-content-around text-muted fw-bold mb-2" style="font-size: 0.7rem;">
+            <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sab</span><span>Dom</span>
+          </div>
+          <div class="row g-1 justify-content-center">
+            <%
+              start_of_month = @current_date.beginning_of_month.beginning_of_week(:monday)
+              end_of_month = @current_date.end_of_month.end_of_week(:monday)
+            %>
+            <% (start_of_month..end_of_month).each do |date| %>
+              <div class="col-1_5 p-1" style="width: 14.28%;">
+                <%= link_to date.day, schedules_path(start_date: date), class: "d-block py-1 rounded text-decoration-none small #{date == @current_date ? 'bg-primary text-white fw-bold' : (date.month == @current_date.month ? 'text-dark' : 'text-muted opacity-50')}" %>
               </div>
             <% end %>
-          <% else %>
-            <div class="text-center text-muted py-4 small" style="font-size: 0.75rem; opacity: 0.5;">Sin eventos</div>
+          </div>
+        </div>
+
+        <hr class="text-muted opacity-25">
+
+    <%# categorías %>
+        <h6 class="fw-bold text-dark mb-3">Categorías</h6>
+        <div class="list-group list-group-flush">
+          <%= link_to schedules_path, class: "list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 rounded-pill mb-1 px-3 py-2 #{params[:category].blank? ? 'active bg-primary text-white' : 'text-dark bg-light'}" do %>
+            <span>Todas</span>
+            <span class="badge <%= params[:category].blank? ? 'bg-white text-primary' : 'bg-secondary text-white' %> rounded-pill"><%= @all_user_schedules.count %></span>
           <% end %>
 
+          <% @categories.each do |cat| %>
+            <%= link_to schedules_path(category: cat, start_date: @current_date), class: "list-group-item list-group-item-action d-flex justify-content-between align-items-center border-0 rounded-pill mb-1 px-3 py-2 #{params[:category] == cat ? 'active bg-primary text-white' : 'text-dark bg-light'}" do %>
+              <span><%= cat %></span>
+              <span class="badge <%= params[:category] == cat ? 'bg-white text-primary' : 'bg-secondary text-white' %> rounded-pill"><%= @all_user_schedules.where(category: cat).count %></span>
+            <% end %>
+          <% end %>
         </div>
-      <% end %>
+
+      </div>
+    </div>
+
+   <%# contenedor principal %>
+    <div class="col-lg-9">
+      <div class="calendar-main-container bg-white p-4 rounded-4 shadow-sm border-0">
+        <div class="calendar-month-grid">
+          <% @week_days.each do |day_info| %>
+            <div class="calendar-day-column p-2 rounded-3">
+
+              <div class="text-center pb-2 mb-2 border-bottom">
+                <span class="d-block text-muted fw-bold text-uppercase" style="font-size: 0.7rem;"><%= day_info[:name] %></span>
+                <span class="d-block fw-bold text-dark fs-6 mt-1"><%= day_info[:num] %></span>
+              </div>
+
+              <% day_schedules = @schedules.select { |s| s.starting_date&.to_date == day_info[:date] } %>
+
+              <% if day_schedules.present? %>
+                <% day_schedules.each do |schedule| %>
+                  <div class="event-card-bloom p-2 mb-2 rounded-3 shadow-sm">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                      <span class="badge bg-light text-primary fw-bold" style="font-size: 0.65rem;">
+                        <%= schedule.starting_hour&.strftime("%I:%M %p") %>
+                      </span>
+                    </div>
+                    <div class="fw-bold text-dark" style="font-size: 0.8rem;"><%= schedule.title %></div>
+                    <% if schedule.category.present? %>
+                      <small class="text-muted d-block mt-1" style="font-size: 0.7rem;"><%= schedule.category %></small>
+                    <% end %>
+                  </div>
+                <% end %>
+              <% else %>
+                <div class="text-center text-muted py-4 small" style="font-size: 0.75rem; opacity: 0.5;">Sin eventos</div>
+              <% end %>
+
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
 
   </div>

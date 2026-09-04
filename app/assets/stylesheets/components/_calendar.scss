@@ -1,0 +1,43 @@
+// Componente y tarjetas del calendario
+.calendar-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.calendar-main-container {
+  background: #ffffff;
+  border-radius: 1rem;
+}
+
+// Grid Lunes a Domingo
+.calendar-month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1rem;
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(1, 1fr); // Se adapta a columna única en pantallas pequeñas
+  }
+}
+
+.calendar-day-column {
+  background-color: #f8f9fa;
+  border: 1px solid #eaeaea;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-card-bloom {
+  background-color: #ffffff;
+  border-left: 4px solid var(--bs-primary, #0d6efd);
+  transition: transform 0.2s ease, shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.08) !important;
+  }
+}

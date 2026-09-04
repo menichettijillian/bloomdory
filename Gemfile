@@ -80,3 +80,5 @@ gem "rouge"
 gem "kramdown-parser-gfm"
 
 gem "ruby-vips", "~> 2.3"
+
+
