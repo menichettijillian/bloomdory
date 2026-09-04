@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   </head>
 
-  <body class="<%= 'dashboard-page' if controller_name == 'pages' && action_name == 'dashboard' %>">
+  <body class="<%= content_for(:body_class) %>">
     <%= render "shared/navbar" %> <%# Esto significa que el navbar aparece automáticamente en TODAS las páginas %>
 
     <%= yield %>

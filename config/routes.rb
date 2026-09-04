@@ -19,4 +19,6 @@ Rails.application.routes.draw do
   get 'objectives', to: 'pages#objectives', as: :objectives
   get 'construction', to: 'pages#construction', as: :construction
 
+  get 'profile', to: 'pages#profile', as: :profile
+
 end

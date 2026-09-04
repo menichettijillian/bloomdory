@@ -96,6 +96,10 @@ class PagesController < ApplicationController
   end
 
   def construction
+    
+  end
        # Pendiente
+  def profile
+    
   end
 end
