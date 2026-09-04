@@ -90,4 +90,7 @@ class PagesController < ApplicationController
       @schedules = base_schedules
     end
   end
+
+  def profile
+  end
 end
