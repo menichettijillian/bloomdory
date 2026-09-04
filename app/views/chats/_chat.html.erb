@@ -7,7 +7,15 @@
     <% end %>
 
     <% chat.messages.order(:created_at, :id).each do |entry| %>
-      <div class="d-flex <%= entry.role == 'user' ? 'justify-content-end' : 'justify-content-start' %> mb-3">
+      <div class="d-flex align-items-start gap-3 <%= entry.role == 'user' ? 'justify-content-end' : 'justify-content-start' %> mb-3">
+        <% if entry.role == "assistant" %>
+          <%= image_tag "Bloomy-07.png",
+                        class: "chat-bloomy-avatar",
+                        width: 48,
+                        height: 48,
+                        alt: "Bloomy" %>
+        <% end %>
+
         <div class="chat-message p-3 rounded-4 <%= entry.role == 'user' ? 'user-message' : 'ia-message' %>">
           <%= sanitize(render_markdown(entry.content.to_s)) %>
         </div>
@@ -19,7 +27,9 @@
     <%= simple_form_for [chat, message],
                         html: {
                           class: "chat-composer",
-                          data: { chat_form_target: "form" }
+                          data: { chat_form_target: "form",
+                                  action: "submit->chat-form#preventDuplicateSubmit turbo:submit-end->chat-form#unlockForm"
+                          }
                         } do |f| %>
       <%= f.input :content,
                   label: "Mensaje para Bloomdory",
@@ -32,14 +42,18 @@
                     class: "chat-composer-input",
                     aria: { describedby: "chat-composer-help" },
                     data: {
-                      action: "keydown->chat-form#submitWithEnter"
+                      chat_form_target: "input",
+                      action: "input->chat-form#toggleSubmitButton keydown->chat-form#submitWithEnter"
                     }
                   } %>
 
       <%= f.button :submit,
                     "Enviar",
                     class: "chat-composer-button",
-                    data: { turbo_submits_with: "Enviando..." } %>
+                    disabled: message.content.to_s.strip.empty?,
+                    data: {
+                      chat_form_target: "submitButton",
+                      turbo_submits_with: "Enviando..." } %>
     <% end %>
 
     <p id="chat-composer-help" class="chat-composer-help">
