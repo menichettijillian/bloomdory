@@ -28,7 +28,7 @@ class MessagesController < ApplicationController
     - Responde a saludos brevemente e invita a planificar.
 
     Cómo responder:
-    - Responde en español, con un tono cercano y claro.
+    - Responde en español, con un tono muy amigable y claro.
     - Si falta información esencial, haz hasta dos preguntas breves.
     - Si tienes suficiente información, presenta una lista
       de actividades con su nombre y duración estimada.
@@ -38,13 +38,29 @@ class MessagesController < ApplicationController
     - Si no alcanza el tiempo, propone priorizar o repartir
       las actividades en varios días.
     - Mantén las respuestas breves y prácticas, sin juzgar.
+    - Usa la fecha actual proporcionada para interpretar exprexiones
+      como "hoy", "mañana", "el martes" y "la póxima semana"
+    - Asegúrate de no responder con el ID de la actividad
+    - Asegúrate de que la fecha se responda con
+      el dia de la semana correspondiente
+    - Asegúrate de agregar al calendario las respuestas del usuario
+    - Asegúrate de preguntar si está de acuerdo en eliminar las actividades.
+      Usa símbolos o emojis alertando
+    - Si las actividades son repetitivas, no enlistes cada una, resume brevemente la respuesta
+      como "Listo, agregué natación por las próximas dos semanas"
 
     Límites:
     - No inventes compromisos, preferencias ni horarios del usuario.
     - Si no recibes su agenda, no afirmes conocerla.
     - Presenta tus planes como propuestas.
-    - No afirmes haber guardado, modificado o eliminado actividades:
-      tu función actual es proponer una planificación por chat.
+    - Si el usuario indica que una actividad se repite durante varios días
+      o semanas, crea una actividad para cada ocurrencia indicada.
+    - No agrupes varias ocurrencias en una sola actividad.
+    - Si la actividad ya existe en el mismo día, confirma si esto es correcto
+      y modifica en caso de que se indique.
+    - No dupliques las actividades
+    - Si es una actividad recurrente, pregunta por cuanto tiempo se realizará
+      y agrégalo en el calendario
 
     Ejemplos de alcance:
     - "¿Quién ganó el Mundial de 2010?"
@@ -55,6 +71,7 @@ class MessagesController < ApplicationController
       Propón cómo distribuir esa hora.
     - "Resuelve esta ecuación."
       Ofrece ayudar a organizar una sesión de estudio.
+
   PROMPT
 
   def create
@@ -71,6 +88,7 @@ class MessagesController < ApplicationController
       # tools
       @ruby_llm_chat.with_tool(CreateTool.new(@chat.user))
       @ruby_llm_chat.with_tool(UpdateTool.new(@chat.user))
+      @ruby_llm_chat.with_tool(DeleteTool.new(@chat.user))
 
       response = @ruby_llm_chat.with_instructions(instructions).ask(@message.content)
 
@@ -93,15 +111,15 @@ class MessagesController < ApplicationController
         "Description: #{schedule.description}",
         "Start date: #{schedule.starting_date}",
         "End date: #{schedule.ending_date}",
-        "Status: #{schedule.category}",
-        "Status: #{schedule.starting_hour}",
-        "Status: #{schedule.ending_hour}"
+        "Category: #{schedule.category}",
+        "Star hour: #{schedule.starting_hour}",
+        "End hour: #{schedule.ending_hour}"
       ].compact.join("\n")
     end.join("\n\n")
   end
 
   def instructions
-    [SYSTEM_PROMPT, schedule_context].compact.join("\n\n")
+    [SYSTEM_PROMPT, "Hoy es #{Date.current}.", schedule_context].compact.join("\n\n")
   end
 
   def build_conversation_history
