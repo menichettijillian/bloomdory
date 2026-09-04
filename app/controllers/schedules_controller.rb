@@ -7,7 +7,7 @@ class SchedulesController < ApplicationController
 
   def update
     if @schedule.update(schedule_params)
-      redirect_to dashboard_path, notice: "¡Ajuste de manecillas! Tu evento ha cambiado de rumbo."
+      redirect_to schedules_path, notice: "¡Ajuste de manecillas! Tu evento ha cambiado de rumbo."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -15,7 +15,7 @@ class SchedulesController < ApplicationController
 
   def destroy
     @schedule.destroy
-    redirect_to dashboard_path, alert: "Despejado por aquí. ¡Adiós a este compromiso!"
+    redirect_to schedules_path, alert: "Despejado por aquí. ¡Adiós a este compromiso!"
   end
 
   private

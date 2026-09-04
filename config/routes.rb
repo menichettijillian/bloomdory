@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   root to: "pages#home"
 
   get "up" => "rails/health#show", as: :rails_health_check
+
   resources :schedules, only: [:edit, :update, :destroy]
 
   resources :chats, only: [:show, :create, :destroy] do
@@ -10,7 +11,6 @@ Rails.application.routes.draw do
   end
 
   get 'dashboard', to: 'pages#dashboard', as: :dashboard
-
-  get "myweek", to: "pages#myweek", as: :my_week
+  get 'schedules', to: 'pages#schedules', as: :schedules
 
 end
